@@ -2,7 +2,6 @@ import { useController, useFormContext } from "react-hook-form";
 
 import { ExclamationCircleIcon } from "@heroicons/react/solid";
 /** @jsxImportSource @emotion/react */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import tw from "twin.macro";
 
 interface ISimpleInputField {
