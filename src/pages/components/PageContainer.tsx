@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { FC, PropsWithChildren } from "react";
+import { containerCSS } from "react-select/dist/declarations/src/components/containers";
 
 import tw from "twin.macro";
 import { TwinStyle } from "../../types";
