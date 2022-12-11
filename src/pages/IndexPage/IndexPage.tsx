@@ -12,7 +12,10 @@ import { Txt } from "../components/Txt";
 import { ISurvey } from "../../api-types";
 import { useHistory } from "react-router";
 import { surveyRepository } from "../../api/surveyRepository";
+import { toast } from "react-toastify";
+
 import { surveryFormUtils } from "../../utils/survey-form-utils";
+import { AxiosError } from "axios";
 
 /** @jsxImportSource @emotion/react */
 
@@ -20,8 +23,10 @@ enum Survey {
   Intro = 1,
   Survey,
 }
+
 export const IndexPage = () => {
   const [surveyStep, setSurveyStep] = useState<Survey>(1);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const {
     data: surveyData,
     isFetching: isFetchingSurveyData,
@@ -47,16 +52,53 @@ export const IndexPage = () => {
   const numberOfSteps = Object.keys(Survey).length / 2;
   const onSubmit = methods.handleSubmit(async (values) => {
     try {
-      console.log(values);
+      setIsSubmitting(true);
       const answers = surveryFormUtils.formatAnswers(values, lastSurvey);
-      surveyRepository.submitAnswer(answers, lastSurvey._id);
-      navigation.push("/success");
-    } catch (e) {
+      await surveyRepository.submitAnswer(answers, lastSurvey._id);
+      navigation.push({
+        pathname: "/success",
+        state: {
+          answers: answers,
+          survey: lastSurvey,
+        },
+      });
+      setIsSubmitting(false);
+      toast.success("Thank you for submitting!");
+    } catch (e: AxiosError | any) {
       console.error(e);
+      setIsSubmitting(false);
+      const {
+        response: { data },
+      } = e;
+      const { response } = e;
+      if (response.status === 422) {
+        data.forEach((error: any) => {
+          if (error.source.pointer.includes("film")) {
+            methods.setError("film", {
+              type: "custom",
+              message: "Field is required",
+            });
+          }
+          if (error.source.pointer.includes("review")) {
+            methods.setError("review", {
+              type: "custom",
+              message: "Field is required",
+            });
+          }
+        });
+      }
+      if (response.status === 500) {
+        toast.error("Internal server error");
+      }
     }
   });
 
-  if (isFetchingSurveyData || isLoadingSurveyData || !surveyData) {
+  if (
+    isFetchingSurveyData ||
+    isLoadingSurveyData ||
+    !surveyData ||
+    isSubmitting
+  ) {
     return <Txt>Loading...</Txt>;
   }
 
@@ -73,7 +115,7 @@ export const IndexPage = () => {
     <PageContainer
       containerCss={[tw`h-screen flex items-center justify-center`]}
     >
-      <div tw="bg-gray-300 p-12 h-2/5 w-2/3 flex flex-col max-w-448">
+      <div tw="bg-gray-300 p-12 max-h-full w-max flex flex-col max-w-448">
         {surveyStep === 1 && (
           <SurveyPrompt
             survey={lastSurvey}

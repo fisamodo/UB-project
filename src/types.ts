@@ -11,3 +11,11 @@ export type ICSSProps = {
   style?: CSSProperties | undefined;
 };
 export type TwinStyle = ArrayInterpolation<Theme>;
+
+export interface ISurveyForm {
+  film: string;
+  review: {
+    value: number;
+    label: string;
+  };
+}

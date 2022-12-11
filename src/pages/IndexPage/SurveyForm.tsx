@@ -45,6 +45,7 @@ export const SurveyForm: React.FC<ISurveyForm> = ({
                 name={question.questionId}
                 placeholder={question.label}
                 inputCss={[tw`text-sm`]}
+                containerCss={[tw`my-4 w-80`]}
               />
             );
           } else if (question.questionType === "rating") {
@@ -56,7 +57,7 @@ export const SurveyForm: React.FC<ISurveyForm> = ({
                   question.attributes!
                 )}
                 placeholder={question.label}
-                containerCss={[tw`my-4`]}
+                containerCss={[tw`my-4 w-80`]}
                 inputCss={[tw`text-white text-sm`]}
               />
             );
@@ -66,7 +67,7 @@ export const SurveyForm: React.FC<ISurveyForm> = ({
         <Button
           text={"Submit"}
           containerCss={[tw`border-2 border-r-2 border-white py-2 px-2`]}
-          inputCss={[tw`text-gray-900 font-semibold text-2xl`]}
+          inputCss={[tw`text-gray-900 font-semibold text-2xl justify-center`]}
           onClick={onSubmit}
         />
       </FormProvider>
