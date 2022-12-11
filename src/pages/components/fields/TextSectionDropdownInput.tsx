@@ -38,25 +38,23 @@ export const TextSectionDropdownInput: React.FC<ITextSectionDropdownInput> = ({
     name,
     control,
   });
-
-  const selectedOption = options.find((o) => o.value === field.value);
+  const { value, label } = field.value;
+  const selectedOption = options.find((o) => o.value === value);
   return (
     <div className={className} css={[tw`w-full`, containerCss]}>
       <Select
         css={[inputCss]}
-        defaultValue={Object.keys(field.value).length === 0 ? {} : field.value}
-        value={Object.keys(field.value).length === 0 ? null : field.value}
+        defaultValue={value === 0 ? {} : field.value}
+        value={value === 0 ? null : field.value}
         onChange={(option: any) => {
           field.onChange(option);
         }}
-        placeholder={!field.value ? "" : placeholder}
+        placeholder={!(value === 0) ? "" : placeholder}
         options={options}
         formatOptionLabel={(o: any) => (
           <div tw="flex items-center">
             <Txt tw="text-gray-700 flex-grow">{o.label}</Txt>
-            {o.value === field.value && (
-              <CheckIcon tw="w-4 h-4 text-primary-600" />
-            )}
+            {o.value === value && <CheckIcon tw="w-4 h-4 text-primary-600" />}
           </div>
         )}
       />

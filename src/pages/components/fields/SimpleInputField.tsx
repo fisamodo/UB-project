@@ -34,17 +34,11 @@ export const SimpleInputField: React.FC<ISimpleInputField> = ({
   });
   return (
     <div css={[tw`relative w-full`, containerCss]}>
-      {error ? (
+      {error && (
         <ExclamationCircleIcon
           tw="h-5 w-5 absolute right-3 top-2.5"
           color="#EF4444"
         />
-      ) : rightText ? (
-        <span tw="text-sm text-gray-500 absolute right-3 top-2.5">
-          {rightText}
-        </span>
-      ) : (
-        <div />
       )}
       <textarea
         id={id ?? ""}
