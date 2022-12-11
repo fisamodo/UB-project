@@ -1,6 +1,7 @@
 //@ts-nocheck
 import { UseFormReturn } from "react-hook-form";
-import { IAttributeValues, ISurvey } from "../api-types";
+import { IAnswer, IAttributeValues, ISurvey } from "../api-types";
+import { ISurveyForm } from "../types";
 
 class SurveyFormUtils {
   getChoiceSpread = (attributes: IAttributeValues) => {
@@ -13,16 +14,7 @@ class SurveyFormUtils {
     });
   };
 
-  formatAnswers = (
-    values: {
-      film: string;
-      review: {
-        value: number;
-        label: string;
-      };
-    },
-    survey: ISurvey
-  ) => {
+  formatAnswers = (values: ISurveyForm, survey: ISurvey) => {
     return {
       type: "surveyAnswers",
       attributes: {
@@ -40,6 +32,15 @@ class SurveyFormUtils {
         }),
       },
     };
+  };
+
+  joinQuestionsWithAnsers = (answer: IAnswer, survey: ISurvey) => {
+    return answer.attributes.answers.map((answer) => {
+      const question = survey.attributes.questions.filter(
+        (survey) => survey.questionId === answer.questionId
+      )[0];
+      return { question, answer };
+    });
   };
 }
 

@@ -9,7 +9,7 @@ interface ITxtProps {
 
 export const Txt: React.FC<ITxtProps> = (props) => {
   return (
-    <div tw="font-sans font-normal text-sm" className={props.className}>
+    <div tw="font-sans font-normal text-sm flex" className={props.className}>
       {props.children}
     </div>
   );

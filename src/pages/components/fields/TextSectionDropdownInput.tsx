@@ -41,7 +41,7 @@ export const TextSectionDropdownInput: React.FC<ITextSectionDropdownInput> = ({
   const { value, label } = field.value;
   const selectedOption = options.find((o) => o.value === value);
   return (
-    <div className={className} css={[tw`w-full`, containerCss]}>
+    <div className={className} css={[tw`relative w-full`, containerCss]}>
       <Select
         css={[inputCss]}
         defaultValue={value === 0 ? {} : field.value}
