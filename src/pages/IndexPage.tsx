@@ -8,10 +8,12 @@ import { Txt } from "./components/Txt";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "./components/Button";
+import { useSurveys } from "../hooks/useSurveys";
 
 /** @jsxImportSource @emotion/react */
 
 export const IndexPage = () => {
+  const { data: surveyData } = useSurveys();
   const schema = yup.object().shape({
     opinion: yup.string().required(),
     rating: yup
@@ -36,7 +38,7 @@ export const IndexPage = () => {
       console.error(e);
     }
   });
-
+  console.log(surveyData);
   return (
     <PageContainer
       containerCss={[tw`h-screen flex items-center justify-center`]}
