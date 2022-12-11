@@ -11,6 +11,8 @@ import { SurveyPrompt } from "./SurveyPrompt";
 import { Txt } from "../components/Txt";
 import { ISurvey } from "../../api-types";
 import { useHistory } from "react-router";
+import { surveyRepository } from "../../api/surveyRepository";
+import { surveryFormUtils } from "../../utils/survey-form-utils";
 
 /** @jsxImportSource @emotion/react */
 
@@ -27,18 +29,17 @@ export const IndexPage = () => {
   } = useSurveys();
   const navigation = useHistory();
   const schema = yup.object().shape({
-    opinion: yup.string().required().typeError("An opinion is required"),
-    rating: yup
+    film: yup.string().typeError("An opinion is required"),
+    review: yup
       .object()
       .shape({ value: yup.number(), label: yup.string() })
-      .required()
       .typeError("A rating is required"),
   });
 
   const methods = useForm({
     defaultValues: {
-      opinion: "",
-      rating: 1,
+      film: "",
+      review: { value: 0, label: "" },
     },
     resolver: yupResolver(schema),
     mode: "onSubmit",
@@ -47,6 +48,8 @@ export const IndexPage = () => {
   const onSubmit = methods.handleSubmit(async (values) => {
     try {
       console.log(values);
+      const answers = surveryFormUtils.formatAnswers(values, lastSurvey);
+      surveyRepository.submitAnswer(answers, lastSurvey._id);
       navigation.push("/success");
     } catch (e) {
       console.error(e);

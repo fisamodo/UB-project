@@ -1,18 +1,31 @@
 export interface IAnswer {
-  type: any;
+  type: string;
+  attributes: IAnswerAttributes;
 }
 
+interface IAnswerAttributes {
+  answers: IAnswers[];
+}
+interface IAnswers {
+  questionId: string;
+  answer: any;
+}
 interface IQuestions {
   questionId: string;
-  questionType: string;
+  questionType: questionType;
   label: string;
   required: boolean;
-  attributes?: any;
+  attributes?: IAttributeValues;
 }
 interface IAttributes {
   title: string;
   description: string;
   questions: IQuestions[];
+}
+
+export interface IAttributeValues {
+  min: number;
+  max: number;
 }
 export interface ISurvey {
   type: string;
@@ -21,3 +34,5 @@ export interface ISurvey {
   updatedAt: Date;
   _id: string;
 }
+
+type questionType = "text" | "rating";
