@@ -7,22 +7,29 @@ import { useController, useFormContext } from "react-hook-form";
 import { ErrorText } from "../ErrorText";
 import React from "react";
 import { Txt } from "../Txt";
-import { IDropdownOption } from "../../../types";
+import { IDropdownOption, TwinStyle } from "../../../types";
+import tw from "twin.macro";
 
 /** @jsxImportSource @emotion/react */
 
-interface ITextSectionDropdownInput<T> {
+interface ITextSectionDropdownInput {
   name: string;
   options: IDropdownOption[];
   placeholder?: string;
   className?: string;
   styles?: any;
+  containerCss?: TwinStyle;
+  inputCss?: TwinStyle;
 }
 
-export const TextSectionDropdownInput = <T extends Object>(
-  props: ITextSectionDropdownInput<T>
-) => {
-  const { name, placeholder, className } = props;
+export const TextSectionDropdownInput: React.FC<ITextSectionDropdownInput> = ({
+  name,
+  placeholder,
+  className,
+  options,
+  containerCss,
+  inputCss,
+}) => {
   const { control } = useFormContext();
   const {
     field,
@@ -32,17 +39,17 @@ export const TextSectionDropdownInput = <T extends Object>(
     control,
   });
 
-  const { options } = props;
   const selectedOption = options.find((o) => o.value === field.value);
   return (
-    <div className={className} tw="w-full">
+    <div className={className} css={[tw`w-full`, containerCss]}>
       <Select
+        css={[inputCss]}
         defaultValue={Object.keys(field.value).length === 0 ? {} : field.value}
         value={Object.keys(field.value).length === 0 ? null : field.value}
         onChange={(option: any) => {
           field.onChange(option);
         }}
-        placeholder={selectedOption ? "" : placeholder}
+        placeholder={!field.value ? "" : placeholder}
         options={options}
         formatOptionLabel={(o: any) => (
           <div tw="flex items-center">
