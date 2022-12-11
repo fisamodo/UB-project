@@ -7,22 +7,29 @@ import { useController, useFormContext } from "react-hook-form";
 import { ErrorText } from "../ErrorText";
 import React from "react";
 import { Txt } from "../Txt";
-import { IDropdownOption } from "../../../types";
+import { IDropdownOption, TwinStyle } from "../../../types";
+import tw from "twin.macro";
 
 /** @jsxImportSource @emotion/react */
 
-interface ITextSectionDropdownInput<T> {
+interface ITextSectionDropdownInput {
   name: string;
   options: IDropdownOption[];
   placeholder?: string;
   className?: string;
   styles?: any;
+  containerCss?: TwinStyle;
+  inputCss?: TwinStyle;
 }
 
-export const TextSectionDropdownInput = <T extends Object>(
-  props: ITextSectionDropdownInput<T>
-) => {
-  const { name, placeholder, className } = props;
+export const TextSectionDropdownInput: React.FC<ITextSectionDropdownInput> = ({
+  name,
+  placeholder,
+  className,
+  options,
+  containerCss,
+  inputCss,
+}) => {
   const { control } = useFormContext();
   const {
     field,
@@ -31,25 +38,23 @@ export const TextSectionDropdownInput = <T extends Object>(
     name,
     control,
   });
-
-  const { options } = props;
-  const selectedOption = options.find((o) => o.value === field.value);
+  const { value, label } = field.value;
+  const selectedOption = options.find((o) => o.value === value);
   return (
-    <div className={className} tw="w-full">
+    <div className={className} css={[tw`relative w-full`, containerCss]}>
       <Select
-        defaultValue={Object.keys(field.value).length === 0 ? {} : field.value}
-        value={Object.keys(field.value).length === 0 ? null : field.value}
+        css={[inputCss]}
+        defaultValue={value === 0 ? {} : field.value}
+        value={value === 0 ? null : field.value}
         onChange={(option: any) => {
           field.onChange(option);
         }}
-        placeholder={selectedOption ? "" : placeholder}
+        placeholder={!(value === 0) ? "" : placeholder}
         options={options}
         formatOptionLabel={(o: any) => (
           <div tw="flex items-center">
             <Txt tw="text-gray-700 flex-grow">{o.label}</Txt>
-            {o.value === field.value && (
-              <CheckIcon tw="w-4 h-4 text-primary-600" />
-            )}
+            {o.value === value && <CheckIcon tw="w-4 h-4 text-primary-600" />}
           </div>
         )}
       />

@@ -164,6 +164,9 @@ module.exports = {
         10: "10rem",
         15: "15rem",
       },
+      minWidth: {
+        400: "400px",
+      },
       flexBasis: {
         10: "10%",
       },

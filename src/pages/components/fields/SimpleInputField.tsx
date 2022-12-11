@@ -2,21 +2,28 @@ import { useController, useFormContext } from "react-hook-form";
 
 import { ExclamationCircleIcon } from "@heroicons/react/solid";
 /** @jsxImportSource @emotion/react */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import tw from "twin.macro";
+import { TwinStyle } from "../../../types";
 
 interface ISimpleInputField {
   name: string;
   placeholder?: string;
-  type?: string;
   rightText?: string;
-  min?: number;
   autoFocus?: boolean;
   id?: string;
+  containerCss?: TwinStyle;
+  inputCss?: TwinStyle;
 }
 
-export const SimpleInputField = (props: ISimpleInputField) => {
-  const { name, placeholder, type, rightText, min, autoFocus, id } = props;
+export const SimpleInputField: React.FC<ISimpleInputField> = ({
+  name,
+  placeholder,
+  rightText,
+  autoFocus,
+  id,
+  containerCss,
+  inputCss,
+}) => {
   const { control } = useFormContext();
   const {
     field,
@@ -26,27 +33,23 @@ export const SimpleInputField = (props: ISimpleInputField) => {
     control,
   });
   return (
-    <div tw="relative w-full">
-      {error ? (
+    <div css={[tw`relative w-full`, containerCss]}>
+      {error && (
         <ExclamationCircleIcon
           tw="h-5 w-5 absolute right-3 top-2.5"
           color="#EF4444"
         />
-      ) : rightText ? (
-        <span tw="text-sm text-gray-500 absolute right-3 top-2.5">
-          {rightText}
-        </span>
-      ) : (
-        <div />
       )}
-      <input
+      <textarea
         id={id ?? ""}
         value={field.value ?? ""}
-        type={type}
         autoFocus={autoFocus ?? false}
-        tw="block w-full mb-0 px-2.5 py-2 border placeholder-gray-500 rounded-md focus:outline-none  focus:border-primary-500"
+        onChange={({ target: { value } }) => field.onChange(value)}
+        css={[
+          tw`block w-full mb-0 px-2.5 py-2 border placeholder-gray-500 rounded-md focus:outline-none  focus:border-primary-500`,
+          inputCss,
+        ]}
         placeholder={placeholder}
-        min={min ?? 0}
       />
     </div>
   );
