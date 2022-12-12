@@ -35,4 +35,16 @@ export interface ISurvey {
   _id: string;
 }
 
+export interface ISurveyFormError {
+  errors: ISurveyError[];
+}
+
+interface ISurveyError {
+  source: IFormErrorSource;
+  detail: string;
+}
+
+interface IFormErrorSource {
+  pointer: string;
+}
 type questionType = "text" | "rating";
