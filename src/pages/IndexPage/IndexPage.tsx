@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 
 import { surveryFormUtils } from "../../utils/survey-form-utils";
 import { AxiosError } from "axios";
+import { axiosErrorHandler } from "../../utils/axios-error-handler";
 
 /** @jsxImportSource @emotion/react */
 
@@ -65,31 +66,8 @@ export const IndexPage = () => {
       setIsSubmitting(false);
       toast.success("Thank you for submitting!");
     } catch (e: AxiosError | any) {
-      console.error(e);
+      axiosErrorHandler.handleFormSubmitResponse(e, methods);
       setIsSubmitting(false);
-      const {
-        response: { data },
-      } = e;
-      const { response } = e;
-      if (response.status === 422) {
-        data.forEach((error: any) => {
-          if (error.source.pointer.includes("film")) {
-            methods.setError("film", {
-              type: "custom",
-              message: "Field is required",
-            });
-          }
-          if (error.source.pointer.includes("review")) {
-            methods.setError("review", {
-              type: "custom",
-              message: "Field is required",
-            });
-          }
-        });
-      }
-      if (response.status === 500) {
-        toast.error("Internal server error");
-      }
     }
   });
 
